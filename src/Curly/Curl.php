@@ -6,6 +6,10 @@ class Curl {
     public $options;
     public function __construct($options = array()){
         $defaults = array(
+            'CURLOPT_HEADER' => false,
+            'CURLOPT_HTTPHEADER' => array(), // Array of string eg. array('Content-Type: text/html', 'Authorization: Basic c2VhbmRyYXl0b25AZ21haWwuY29tOjRKRlBrZVlJ')
+            'CURLOPT_USERPWD' => '', // Eg. 'someone@gmail.com:password'
+
             'CURLOPT_RETURNTRANSFER' => true,
             'CURLOPT_FOLLOWLOCATION' => true,
             'CURLOPT_SSL_VERIFYPEER' => false, // Insecure SSL
@@ -28,7 +32,18 @@ class Curl {
         curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, $options['CURLOPT_SSL_VERIFYPEER']);
         curl_setopt($this->curl, CURLOPT_USERAGENT, $options['CURLOPT_USERAGENT']);
 
+        if($options['CURLOPT_HEADER']){
+            curl_setopt($this->curl, CURLOPT_HEADER, true);
+        }
+        if(!empty($options['CURLOPT_HTTPHEADER'])){
+            curl_setopt($this->curl, CURLOPT_HTTPHEADER, $options['CURLOPT_HTTPHEADER']);
+        }
+        if($options['CURLOPT_USERPWD']){
+            curl_setopt($this->curl, CURLOPT_USERPWD, $options['CURLOPT_USERPWD']);
+        }
+
     }
+
     public function get($url){
 
         $this->reset($this->options); // Prevent post and get conflicts
